@@ -74,6 +74,7 @@
 		EF0B46C32D0B5AC10018C8D6 /* M08-UF1-PR01-JaumeGandara_AlbertGarrido */ = {
 			isa = PBXGroup;
 			children = (
+				EF0B46CD2D0B5AC20018C8D6 /* Info.plist */,
 				EFD809CF2D2EEABB00EA5D30 /* Views */,
 				EFD809CE2D2EEAB100EA5D30 /* ViewModel */,
 				EFD809CD2D2EEAAB00EA5D30 /* Model */,
@@ -94,10 +95,9 @@
 		EFD809C92D2EE9E400EA5D30 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				EF0B46CD2D0B5AC20018C8D6 /* Info.plist */,
-				EF0B46C62D0B5AC10018C8D6 /* ContentView.swift */,
-				EF0B46C82D0B5AC20018C8D6 /* Assets.xcassets */,
 				EF0B46C42D0B5AC10018C8D6 /* M08_UF1_PR01_JaumeGandara_AlbertGarridoApp.swift */,
+				EF0B46C82D0B5AC20018C8D6 /* Assets.xcassets */,
+				EF0B46C62D0B5AC10018C8D6 /* ContentView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";

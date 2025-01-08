@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Recipe: Identifiable {
-    let id = UUID()
+struct Recipe: Identifiable, Codable {
+    let id: UUID
     var title: String
-    var ingredients: [Ingredient] = []
+    var ingredients: [Ingredient]
     var steps: String
     var category: Category
     var time: Int
-    var isFavorite: Bool = false
+    var isFavorite: Bool
     var image: String?
 }
