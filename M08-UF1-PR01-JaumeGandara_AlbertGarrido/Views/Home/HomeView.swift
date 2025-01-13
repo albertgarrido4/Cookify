@@ -22,13 +22,14 @@ struct HomeView: View {
             return recipes
         } else {
             return recipes.filter {
-$0.title.lowercased().contains(searchText.lowercased()) }
+                $0.title.lowercased().contains(searchText.lowercased())
+            }
         }
     }
 
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 // Barra de cerca
                 HStack {
                     TextField("Cerca receptes...", text: $searchText)
@@ -45,20 +46,17 @@ $0.title.lowercased().contains(searchText.lowercased()) }
                     }
                     .padding(.trailing)
                 }
-
+                
                 // Llista de receptes
-                List(filteredRecipes) { recipe in
-                    NavigationLink(destination:
-RecipeDetailView(recipe: recipe)) {
-                        VStack(alignment: .leading) {
-                            Text(recipe.title)
-                                .font(.headline)
-                            Text(recipe.category.rawValue.capitalized)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
+                List(filteredRecipes) { recipe in NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
+                    VStack(alignment: .leading) {
+                        Text(recipe.title)
+                            .font(.headline)
+                        Text(recipe.category.rawValue.capitalized)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
-                }
+                }}
 
                 // Barra inferior
                 HStack {
@@ -96,15 +94,15 @@ RecipeDetailView(recipe: recipe)) {
                 }
                 .padding()
                 .background(Color(UIColor.systemGray6))
-            }
-            .navigationTitle("navigationTitle")
+            }.navigationBarHidden(true)
+            //.edgesIgnoringSafeArea(.top)
         }
     }
 }
 
 struct RecipeDetailView: View {
     let recipe: Recipe
-
+        
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(recipe.title)
