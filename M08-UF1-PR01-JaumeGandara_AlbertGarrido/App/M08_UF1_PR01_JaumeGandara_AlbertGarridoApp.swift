@@ -11,7 +11,7 @@ import SwiftUI
 struct M08_UF1_PR01_JaumeGandara_AlbertGarridoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }

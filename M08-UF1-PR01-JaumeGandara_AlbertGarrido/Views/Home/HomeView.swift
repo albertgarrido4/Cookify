@@ -18,109 +18,120 @@ struct HomeView: View {
     ]
 
     var filteredRecipes: [Recipe] {
-        if searchText.isEmpty {
-            return recipes
-        } else {
-            return recipes.filter {
-                $0.title.lowercased().contains(searchText.lowercased())
+            if searchText.isEmpty {
+                return recipes
+            } else {
+                return recipes.filter {
+                    $0.title.lowercased().contains(searchText.lowercased())
+                }
+            }
+        }
+        
+        var body: some View {
+            NavigationView {
+                VStack(spacing: 0) {
+                    // Barra de búsqueda mejorada
+                    HStack {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                            TextField("Search", text: $searchText)
+                        }
+                        .padding(8)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                        
+                        Button(action: {
+                            print("Crear recepta")
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.blue)
+                        }
+                        .padding(.trailing, 16)
+                    }
+                    .padding(.vertical, 8)
+                    
+                    // Lista de recetas con diseño de tarjetas
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
+                            ForEach(filteredRecipes) { recipe in
+                                NavigationLink(
+                                    destination: VStack(alignment: .leading, spacing: 16) {
+                                        Text(recipe.title)
+                                            .font(.largeTitle)
+                                        Text("Categoria: \(recipe.category.rawValue.capitalized)")
+                                            .font(.subheadline)
+                                        Text("Temps: \(recipe.time) min")
+                                            .font(.subheadline)
+                                        Text("Passos: \(recipe.steps)")
+                                            .font(.body)
+                                    }
+                                    .padding()
+                                    .navigationTitle("Detalls de la recepta")
+                                ) {
+                                    // Diseño de tarjeta de receta
+                                    HStack(spacing: 12) {
+                                        Rectangle()
+                                            .fill(Color(.systemGray5))
+                                            .frame(width: 80, height: 80)
+                                            .cornerRadius(8)
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(recipe.title)
+                                                .font(.system(size: 16, weight: .medium))
+                                            Text("\(recipe.time) min")
+                                                .font(.system(size: 14))
+                                                .foregroundColor(.gray)
+                                        }
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(12)
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    
+                    // Barra de navegación inferior
+                    HStack(spacing: 0) {
+                        Spacer()
+                        // Botón Favoritos
+                        Button(action: { print("Favorits") }) {
+                            Image(systemName: "star.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(.gray)
+                                .frame(width: 60)
+                        }
+                        Spacer()
+                        // Botón Home
+                        Button(action: { print("Home") }) {
+                            Image(systemName: "house.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(.black)
+                                .frame(width: 60)
+                        }
+                        Spacer()
+                        // Botón Temporizador
+                        Button(action: { print("Temporitzador") }) {
+                            Image(systemName: "clock")
+                                .font(.system(size: 22))
+                                .foregroundColor(.gray)
+                                .frame(width: 60)
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 8)
+                    .background(Color.white)
+                    .shadow(color: Color.black.opacity(0.05), radius: 5, y: -5)
+                }
+                .navigationBarHidden(true)
+                .background(Color.white)
             }
         }
     }
-
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                // Barra de cerca
-                HStack {
-                    TextField("Cerca receptes...", text: $searchText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-
-                    Button(action: {
-                        // Acció per crear una nova recepta
-                        print("Crear recepta")
-                    }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.blue)
-                    }
-                    .padding(.trailing)
-                }
-                
-                // Llista de receptes
-                List(filteredRecipes) { recipe in NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
-                    VStack(alignment: .leading) {
-                        Text(recipe.title)
-                            .font(.headline)
-                        Text(recipe.category.rawValue.capitalized)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                }}
-
-                // Barra inferior
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        print("Favorits")
-                    }) {
-                        VStack {
-                            Image(systemName: "star.fill")
-                            Text("")
-                                .font(.caption)
-                        }
-                    }
-                    Spacer()
-                    Button(action: {
-                        print("Home")
-                    }) {
-                        VStack {
-                            Image(systemName: "house.fill")
-                            Text("")
-                                .font(.caption)
-                        }
-                    }
-                    Spacer()
-                    Button(action: {
-                        print("Temporitzador")
-                    }) {
-                        VStack {
-                            Image(systemName: "stopwatch.fill")
-                            Text("")
-                                .font(.caption)
-                        }
-                    }
-                    Spacer()
-                }
-                .padding()
-                .background(Color(UIColor.systemGray6))
-            }.navigationBarHidden(true)
-            //.edgesIgnoringSafeArea(.top)
-        }
-    }
-}
-
-struct RecipeDetailView: View {
-    let recipe: Recipe
-        
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(recipe.title)
-                .font(.largeTitle)
-            Text("Categoria: \(recipe.category.rawValue.capitalized)")
-                .font(.subheadline)
-            Text("Temps: \(recipe.time) min")
-                .font(.subheadline)
-            Text("Passos: \(recipe.steps)")
-                .font(.body)
-        }
-        .padding()
-        .navigationTitle("Detalls de la recepta")
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-    }
-}
