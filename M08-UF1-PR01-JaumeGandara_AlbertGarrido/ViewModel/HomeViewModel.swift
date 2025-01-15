@@ -8,20 +8,11 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-    // Clave para guardar y cargar recetas en UserDefaults
-    private let recipesKey = "recipes"
-    
-    // Lista de recetas
-    @Published var recipes: [Recipe] = [] {
-        didSet {
-            saveRecipes()
-        }
-    }
-    
-    // Texto de búsqueda
+    @Published var recipes: [Recipe] = []
     @Published var searchText: String = ""
     
-    // Lista de recetas filtradas
+    private let recipesKey = "recipes"
+    
     var filteredRecipes: [Recipe] {
         if searchText.isEmpty {
             return recipes
@@ -30,56 +21,67 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    // Inicializador
     init() {
         loadRecipes()
     }
     
-    // Guardar recetas en UserDefaults
+    func createRecipe(_ recipe: Recipe) {
+        recipes.append(recipe)
+        saveRecipes()
+    }
+    
+    func updateRecipe(_ recipe: Recipe) {
+        if let index = recipes.firstIndex(where: { $0.id == recipe.id }) {
+            recipes[index] = recipe
+            saveRecipes()
+        }
+    }
+    
+    func deleteRecipe(_ recipe: Recipe) {
+        recipes.removeAll { $0.id == recipe.id }
+        saveRecipes()
+    }
+    
+    func toggleFavorite(for recipe: Recipe) {
+        if let index = recipes.firstIndex(where: { $0.id == recipe.id }) {
+            recipes[index].isFavorite.toggle()
+            saveRecipes()
+        }
+    }
+    
     private func saveRecipes() {
         do {
             let data = try JSONEncoder().encode(recipes)
             UserDefaults.standard.set(data, forKey: recipesKey)
         } catch {
-            print("Error al guardar recetas: \(error)")
+            print("Error saving recipes: \(error)")
         }
     }
     
-    // Cargar recetas desde UserDefaults
     private func loadRecipes() {
         guard let data = UserDefaults.standard.data(forKey: recipesKey) else {
-            recipes = []
+            // Cargar recetas de ejemplo si no hay datos guardados
+            loadSampleRecipes()
             return
         }
         
         do {
             recipes = try JSONDecoder().decode([Recipe].self, from: data)
         } catch {
-            print("Error al cargar recetas: \(error)")
-            recipes = []
+            print("Error loading recipes: \(error)")
+            loadSampleRecipes()
         }
     }
     
-    // Crear una nueva receta
-    func createRecipe(title: String, ingredients: [Ingredient], steps: String, category: Category, time: Int, isFavorite: Bool = false, image: String? = nil) {
-        let newRecipe = Recipe(
-            id: UUID(),
-            title: title,
-            ingredients: ingredients,
-            steps: steps,
-            category: category,
-            time: time,
-            isFavorite: isFavorite,
-            image: image
-        )
-        recipes.append(newRecipe)
-    }
-    
-    // Alternar favorito
-    func toggleFavorite(for recipe: Recipe) {
-        if let index = recipes.firstIndex(where: { $0.id == recipe.id }) {
-            recipes[index].isFavorite.toggle()
-        }
+    private func loadSampleRecipes() {
+        recipes = [
+            Recipe(id: UUID(), title: "Pancakes", ingredients: [
+                Ingredient(title: "Farina", quantity: "200g"),
+                Ingredient(title: "Llet", quantity: "300ml"),
+                Ingredient(title: "Ous", quantity: "2")
+            ], steps: "1. Barreja tots els ingredients.\n2. Cuina al foc fins que estiguin daurats.", category: .breakfast, time: 15, isFavorite: true, image: nil),
+            // Añade más recetas de ejemplo aquí...
+        ]
+        saveRecipes()
     }
 }
-
