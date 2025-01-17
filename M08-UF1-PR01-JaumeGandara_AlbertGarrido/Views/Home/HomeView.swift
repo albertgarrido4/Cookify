@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject private var homeViewModel = HomeViewModel()
     @State private var searchText = ""
     @State private var recipes: [Recipe] = [
         Recipe(id: UUID(), title: "Pancakes", ingredients: [Ingredient(title: "Farina", quantity: "200g"), Ingredient(title: "Llet", quantity: "300ml"), Ingredient(title: "Ous", quantity: "2")], steps: "1. Barreja tots els ingredients. 2. Cuina al foc fins que estiguin daurats.", category: .breakfast, time: 15, isFavorite: true, image: nil),
@@ -16,12 +17,13 @@ struct HomeView: View {
         Recipe(id: UUID(), title: "Brownie de Xocolata", ingredients: [Ingredient(title: "Xocolata negra", quantity: "200g"), Ingredient(title: "Mantega", quantity: "100g"), Ingredient(title: "Sucre", quantity: "150g"), Ingredient(title: "Farina", quantity: "100g"), Ingredient(title: "Ous", quantity: "2")], steps: "1. Foneu la xocolata i la mantega. 2. Barregeu amb sucre, ous i farina. 3. Coeu al forn a 180ºC durant 20 minuts.", category: .dessert, time: 25, isFavorite: true, image: nil),
         Recipe(id: UUID(), title: "Fruita amb Iogurt", ingredients: [Ingredient(title: "Iogurt natural", quantity: "1"), Ingredient(title: "Maduixes", quantity: "100g"), Ingredient(title: "Plàtan", quantity: "1"), Ingredient(title: "Mel", quantity: "1 cullerada")], steps: "1. Talleu la fruita a trossos petits. 2. Barregeu amb iogurt i mel.", category: .snack, time: 5, isFavorite: false, image: nil)
     ]
+    @State private var isCreatingRecipe = false
 
     var filteredRecipes: [Recipe] {
             if searchText.isEmpty {
-                return recipes
+                return homeViewModel.recipes
             } else {
-                return recipes.filter {
+                return homeViewModel.recipes.filter {
                     $0.title.lowercased().contains(searchText.lowercased())
                 }
             }
@@ -42,8 +44,16 @@ struct HomeView: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                         
+                        NavigationLink(
+                            destination: CreateEditView(viewModel: CreateEditViewModel(homeViewModel: HomeViewModel())),
+                            isActive: $isCreatingRecipe
+                        ) {
+                            EmptyView()
+                        }
+
+                        
                         Button(action: {
-                            print("Crear recepta")
+                            isCreatingRecipe = true
                         }) {
                             Image(systemName: "plus.circle.fill")
                                 .font(.title)
