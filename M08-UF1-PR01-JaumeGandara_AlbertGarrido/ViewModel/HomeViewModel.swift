@@ -10,6 +10,15 @@ import Foundation
 class HomeViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
     @Published var searchText: String = ""
+    @Published var isEditing = false
+    @Published var alertMessage = ""
+    @Published var showAlert = false
+    @Published var title: String = ""
+    @Published var ingredients: [Ingredient] = []
+    @Published var steps: String = ""
+    @Published var category: Category = .lunch
+    @Published var time: String = ""
+    @Published var image: String? = nil
     
     private let recipesKey = "recipes"
     
@@ -22,7 +31,7 @@ class HomeViewModel: ObservableObject {
     }
     
     init() {
-        loadRecipes()
+        self.loadRecipes()
     }
     
     func createRecipe(_ recipe: Recipe) {
@@ -75,7 +84,7 @@ class HomeViewModel: ObservableObject {
     
     private func loadSampleRecipes() {
         recipes = [
-            Recipe(id: UUID(), title: "Pancakes", ingredients: [
+            Recipe(title: "Pancakes", ingredients: [
                 Ingredient(title: "Farina", quantity: "200g"),
                 Ingredient(title: "Llet", quantity: "300ml"),
                 Ingredient(title: "Ous", quantity: "2")
@@ -84,4 +93,13 @@ class HomeViewModel: ObservableObject {
         ]
         saveRecipes()
     }
+    
+    func saveRecipe(recipe: Recipe) -> Bool {
+        print("TODO: evitar duplicados")
+        recipes.append(recipe)
+        return true
+
+    }
+    
+    
 }

@@ -48,36 +48,9 @@ class CreateEditViewModel: ObservableObject {
         ingredients.append(ingredient)
     }
     
-    func deleteIngredient(at offsets: IndexSet) {
-        ingredients.remove(atOffsets: offsets)
-    }
     
-    func saveRecipe() -> Bool {
-        guard let timeInt = Int(time) else {
-            alertMessage = "Please enter a valid preparation time"
-            showAlert = true
-            return false
-        }
-        
-        let newRecipe = Recipe(
-            id: recipe?.id ?? UUID(),
-            title: title,
-            ingredients: ingredients,
-            steps: steps,
-            category: category,
-            time: timeInt,
-            isFavorite: recipe?.isFavorite ?? false,
-            image: image
-        )
-        
-        if isEditing {
-            homeViewModel.updateRecipe(newRecipe)
-        } else {
-            homeViewModel.createRecipe(newRecipe)
-        }
-        
-        return true
-    }
+    
+    
     
 }
 

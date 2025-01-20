@@ -8,24 +8,35 @@
 import SwiftUI
 
 struct CreateEditView: View {
-    @StateObject var viewModel: CreateEditViewModel
+    @EnvironmentObject var viewModel: HomeViewModel
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isImagePickerPresented = false
     @State private var inputImage: UIImage? = nil
     @State private var newIngredientTitle = ""
     @State private var newIngredientQuantity = ""
-
     
+    
+    @State var title: String = ""
+    @State var ingredients: [Ingredient] = []
+    @State var steps: String = ""
+    @State var category: Category = .lunch
+    @State var time: String = ""
+    @State var image: String? = nil
+    @State var showAlert = false
+    @State var alertMessage = ""
+
+    @State var recipeToEdit: Recipe?
 
     var body: some View {
+        NavigationView{
         Form {
             Section(header: Text("Photo")) {
                 Button(action: {
                     isImagePickerPresented = true
                 }) {
                     VStack {
-                        if let imageUrlString = viewModel.image, let imageUrl = URL(string: imageUrlString) {
+                        if let imageUrlString = image, let imageUrl = URL(string: imageUrlString) {
                             AsyncImageCompat(url: imageUrl)
                                 .frame(height: 200)
                                 .clipped()
@@ -46,18 +57,18 @@ struct CreateEditView: View {
             }
             
             Section(header: Text("Basic Information")) {
-                TextField("Title", text: $viewModel.title)
-                Picker("Category", selection: $viewModel.category) {
+                TextField("Title", text: $title)
+                Picker("Category", selection: $category) {
                     ForEach(Category.allCases, id: \.self) { category in
                         Text(category.rawValue.capitalized)
                     }
                 }
-                TextField("Preparation Time (minutes)", text: $viewModel.time)
+                TextField("Preparation Time (minutes)", text: $time)
                     .keyboardType(.numberPad)
             }
             
             Section(header: Text("Ingredients")) {
-                ForEach(viewModel.ingredients) { ingredient in
+                ForEach(ingredients) { ingredient in
                     HStack {
                         Text(ingredient.title)
                         if let quantity = ingredient.quantity {
@@ -67,13 +78,15 @@ struct CreateEditView: View {
                         }
                     }
                 }
-                .onDelete(perform: viewModel.deleteIngredient)
+                .onDelete(perform: deleteIngredient)
                 
                 HStack {
                     TextField("Ingredient", text: $newIngredientTitle)
                     TextField("Quantity", text: $newIngredientQuantity)
                     Button {
-                        viewModel.addIngredient(title: newIngredientTitle, quantity: newIngredientQuantity)
+                        guard !newIngredientTitle.isEmpty else { return }
+                        let ingredient = Ingredient(title: newIngredientTitle, quantity: newIngredientQuantity)
+                        ingredients.append(ingredient)
                         newIngredientTitle = ""
                         newIngredientQuantity = ""
                     } label: {
@@ -84,7 +97,7 @@ struct CreateEditView: View {
             }
             
             Section(header: Text("Instructions")) {
-                TextEditor(text: $viewModel.steps)
+                TextEditor(text: $steps)
                     .frame(minHeight: 100)
             }
         }
@@ -97,16 +110,31 @@ struct CreateEditView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(viewModel.isEditing ? "Save" : "Create") {
-                    if viewModel.saveRecipe() {
+                    if viewModel.isEditing{
+                        print("TODO: viewModel edit")
+                    }else{
+                        let recipe = Recipe(title: title, ingredients: ingredients, steps: steps, category: category, time: Int(time)!, isFavorite: false, image: image)
+                        if viewModel.saveRecipe(recipe: recipe){
                         presentationMode.wrappedValue.dismiss()
+                        }
                     }
                 }
-                .disabled(!viewModel.isValid)
+                .disabled(!isValid())
             }
         }
-        .alert(isPresented: $viewModel.showAlert) {
+        .alert(isPresented: $showAlert) {
             Alert(title: Text("Error"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
         }
+            
+        }.onAppear(){
+            if viewModel.isEditing{
+                
+            }
+        }
+    }
+    
+    func isValid()-> Bool {
+        !title.isEmpty && !ingredients.isEmpty && !steps.isEmpty && Int(time) != nil
     }
     
     private var placeholderImage: some View {
@@ -117,5 +145,9 @@ struct CreateEditView: View {
             Image(systemName: "photo")
                 .foregroundColor(.gray)
         }
+    }
+    
+    func deleteIngredient(at offsets: IndexSet) {
+        ingredients.remove(atOffsets: offsets)
     }
 }

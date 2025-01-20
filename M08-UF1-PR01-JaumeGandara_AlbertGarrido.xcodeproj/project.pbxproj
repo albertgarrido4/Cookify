@@ -74,10 +74,10 @@
 		EF0B46C32D0B5AC10018C8D6 /* M08-UF1-PR01-JaumeGandara_AlbertGarrido */ = {
 			isa = PBXGroup;
 			children = (
+				EFD809CD2D2EEAAB00EA5D30 /* Model */,
 				EF0B46CD2D0B5AC20018C8D6 /* Info.plist */,
 				EFD809CF2D2EEABB00EA5D30 /* Views */,
 				EFD809CE2D2EEAB100EA5D30 /* ViewModel */,
-				EFD809CD2D2EEAAB00EA5D30 /* Model */,
 				EFD809C92D2EE9E400EA5D30 /* App */,
 				EF0B46CA2D0B5AC20018C8D6 /* Preview Content */,
 			);
@@ -125,6 +125,7 @@
 		EFD809CF2D2EEABB00EA5D30 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EFD809D32D2EEAF200EA5D30 /* Details */,
 				EFDD34FF2D382FE6009513BF /* Components */,
 				EFD809D42D2EEAFA00EA5D30 /* Create */,
 				EFD809D22D2EEAEA00EA5D30 /* Home */,
@@ -152,7 +153,6 @@
 			isa = PBXGroup;
 			children = (
 				EFD809DD2D2EEBF500EA5D30 /* CreateEditView.swift */,
-				EFD809D32D2EEAF200EA5D30 /* Details */,
 			);
 			path = Create;
 			sourceTree = "<group>";

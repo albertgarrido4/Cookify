@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct M08_UF1_PR01_JaumeGandara_AlbertGarridoApp: App {
+    @StateObject private var homeViewModel = HomeViewModel()
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            HomeView().environmentObject(homeViewModel)
         }
     }
 }
