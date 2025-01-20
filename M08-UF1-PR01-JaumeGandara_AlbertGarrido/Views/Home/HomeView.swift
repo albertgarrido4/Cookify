@@ -99,10 +99,8 @@ struct HomeView: View {
                 }
                 .listStyle(PlainListStyle())
                 
-                // Barra de navegación inferior
                 HStack(spacing: 0) {
                     Spacer()
-                    // Botón Favoritos
                     Button(action: { print("Favorits") }) {
                     Image(systemName: "star.fill")
                         .font(.system(size: 22))
@@ -110,7 +108,6 @@ struct HomeView: View {
                         .frame(width: 60)
                     }
                     Spacer()
-                    // Botón Home
                     Button(action: { print("Home") }) {
                         Image(systemName: "house.fill")
                             .font(.system(size: 22))
@@ -118,9 +115,8 @@ struct HomeView: View {
                             .frame(width: 60)
                     }
                     Spacer()
-                    // Botón Temporizador
-                    Button(action: { print("Temporitzador") }) {
-                        Image(systemName: "clock")
+                    Button(action: {  }) {
+                        Image(systemName: "info")
                             .font(.system(size: 22))
                             .foregroundColor(.gray)
                             .frame(width: 60)

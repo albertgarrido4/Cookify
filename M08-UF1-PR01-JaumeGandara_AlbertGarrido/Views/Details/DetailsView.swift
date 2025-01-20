@@ -62,3 +62,4 @@ struct DetailsView: View {
         .navigationTitle("Detalls")
     }
 }
+ 
